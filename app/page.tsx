@@ -30,7 +30,8 @@ const CodingProblemGenerator = () => {
     if (file) {
       const reader = new FileReader();
       reader.onload = (event) => {
-        const problems = event.target.result.trim().split('\n');
+        const result = event.target.result as string;
+        const problems = result.trim().split('\n');
         const sets = generateDailyProblemSets(problems);
         setDailyProblemSets(sets);
         setUploadDate(new Date());
