@@ -1,101 +1,138 @@
-import Image from "next/image";
+"use client"
+import React, { useState, useEffect } from 'react';
+import './App.css'; // Custom CSS for styles
 
-export default function Home() {
+const CodingProblemGenerator = () => {
+  const [dailyProblemSets, setDailyProblemSets] = useState([]);
+  const [completedProblems, setCompletedProblems] = useState([]);
+  const [uploadDate, setUploadDate] = useState(null);
+
+  useEffect(() => {
+    const storedDailyProblemSets = localStorage.getItem('dailyProblemSets');
+    const storedCompletedProblems = localStorage.getItem('completedProblems');
+    const storedUploadDate = localStorage.getItem('uploadDate');
+
+    if (storedDailyProblemSets) {
+      setDailyProblemSets(JSON.parse(storedDailyProblemSets));
+    }
+
+    if (storedCompletedProblems) {
+      setCompletedProblems(JSON.parse(storedCompletedProblems));
+    }
+
+    if (storedUploadDate) {
+      setUploadDate(new Date(storedUploadDate));
+    }
+  }, []);
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const problems = event.target.result.trim().split('\n');
+        const sets = generateDailyProblemSets(problems);
+        setDailyProblemSets(sets);
+        setUploadDate(new Date());
+        localStorage.setItem('dailyProblemSets', JSON.stringify(sets));
+        localStorage.setItem('uploadDate', new Date().toISOString());
+      };
+      reader.readAsText(file);
+    }
+  };
+
+  const generateDailyProblemSets = (problems) => {
+    const sets = [];
+    for (let i = 0; i < problems.length; i += 10) {
+      sets.push(problems.slice(i, i + 10));
+    }
+    return sets;
+  };
+
+  const toggleProblemCompletion = (problem) => {
+    if (completedProblems.includes(problem)) {
+      setCompletedProblems(completedProblems.filter((p) => p !== problem));
+    } else {
+      setCompletedProblems([...completedProblems, problem]);
+    }
+    localStorage.setItem('completedProblems', JSON.stringify(completedProblems));
+  };
+
+  const getDaysSinceUpload = () => {
+    if (!uploadDate) return 0;
+    const currentDate = new Date();
+    return Math.floor((currentDate.getTime() - uploadDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+  };
+
+  const daysSinceUpload = getDaysSinceUpload();
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="terminal-container">
+      <header className="terminal-header">
+        <h1>🎄 Advent of LeetCode 🎄</h1>
+      </header>
+      <main className="terminal-main">
+        <div className="upload-section">
+          <label htmlFor="problem-file">📁 Upload Problem List:</label>
+          <input
+            id="problem-file"
+            type="file"
+            className="file-input"
+            onChange={handleFileUpload}
+          />
+        </div>
+        <div className="problem-list">
+          {uploadDate && (
+            <p>📅 Problems since {uploadDate.toLocaleDateString('en-US')}:</p>
+          )}
+          <ul className="problems-grid">
+            {dailyProblemSets.map((set, dayIndex) => {
+              const dayDate = new Date(uploadDate.getTime() + dayIndex * 24 * 60 * 60 * 1000);
+              const isVisible = dayIndex < daysSinceUpload;
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+              return (
+                <li key={dayIndex} className="problem-item">
+                  <h4 className="day-header">
+                    Day {dayIndex + 1} - {dayDate.toLocaleDateString('en-US')}
+                  </h4>
+                  {isVisible ? (
+                    <ul className="problem-set">
+                    {set.map((problem, index) => (
+                      <li key={index} className="problem">
+                        <span
+                          className={`problem-text ${
+                            completedProblems.includes(problem) ? 'completed' : ''
+                          }`}
+                        >
+                          {problem}
+                        </span>
+                        <button
+                          className={`toggle-button ${
+                            completedProblems.includes(problem) ? 'completed' : ''
+                          }`}
+                          onClick={() => toggleProblemCompletion(problem)}
+                        >
+                          {completedProblems.includes(problem) ? '⭐ ' : '❌'}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                  ) : (
+                    <p className="hidden-message">
+                      🤫 Come back on {dayDate.toLocaleDateString('en-US')} to see the problems!
+                    </p>
+                  )}
+                </li>
+              );
+            })}
+            {daysSinceUpload > dailyProblemSets.length && (
+              <p className="text-gray-600">No more problems available for future days.</p>
+            )}
+          </ul>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
-}
+};
+
+export default CodingProblemGenerator;

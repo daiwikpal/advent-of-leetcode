@@ -1,0 +1,114 @@
+body {
+    background-color: #0d1117; /* Dark background */
+    color: #c9d1d9; /* Light gray text */
+    font-family: 'Courier New', Courier, monospace; /* Monospace font */
+    margin: 0;
+    padding: 0;
+  }
+  
+  .terminal-container {
+    padding: 1rem;
+  }
+  
+  .terminal-header {
+    text-align: center;
+    color: #39ff14; /* Vibrant green */
+    margin-bottom: 1rem;
+  }
+  
+  .upload-section {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .upload-section label {
+    color: #ffcc00; /* Yellow */
+    font-size: 1.2rem;
+  }
+  
+  .file-input {
+    margin-top: 0.5rem;
+    background-color: #161b22;
+    border: 1px solid #39ff14;
+    color: #c9d1d9;
+    padding: 0.5rem;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  
+  .problem-list {
+    padding: 1rem;
+    border: 1px dashed #ffcc00; /* Yellow dashed border */
+  }
+  
+  .problems-grid {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .problem-item {
+    padding: 0.5rem;
+    border-bottom: 1px dotted #39ff14;
+  }
+  
+  .day-header {
+    color: #ffcc00;
+    font-size: 15rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .problem-set {
+    list-style: none;
+    padding-left: 1rem;
+  }
+  
+  .problem {
+    padding: 0.3rem 0;
+    cursor: pointer;
+  }
+  
+  .problem:hover {
+    color: #39ff14;
+  }
+  
+  .completed {
+    text-decoration: line-through;
+    color: #ffcc00;
+  }
+  
+  .hidden-message {
+    color: #c9d1d9;
+    font-style: italic;
+  }
+  .problem {
+    display: flex;
+    justify-content: space-between; /* Pushes the button to the right */
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+  
+  .problem-text {
+    text-align: left;
+    flex-grow: 1; /* Ensures the text stays left-aligned */
+  }
+  
+  .toggle-button {
+    background-color: #161b22;
+    border: 1px solid #ffcc00;
+    color: #c9d1d9;
+    padding: 0.3rem 0.6rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  
+  .toggle-button.completed {
+    background-color: #39ff14; /* Green for completed */
+    color: #0d1117;
+  }
+  
+  .toggle-button:hover {
+    background-color: #ffcc00; /* Highlight on hover */
+    color: #0d1117;
+  }
+  
+  
