@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react';
-import './App.css'; // Custom CSS for styles
+import './app.css'; // Custom CSS for styles
 
 const CodingProblemGenerator = () => {
   const [dailyProblemSets, setDailyProblemSets] = useState([]);
