@@ -1,5 +1,8 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## About
+Welcome to Advent of Leetcode, a platform inspired by the idea of Advent of Code but tailored for LeetCode enthusiasts! My motivation for creating this site stemmed from the need for a structured, gamified approach to tackling coding problems. As someone who enjoys solving LeetCode questions but often found it challenging to stay consistent, I envisioned a tool that could help streamline daily practice while keeping things engaging. The site allows you to upload a simple .txt file containing a list of problems you want to work on. It then generates a personalized set of problems each day, giving you a clear and manageable plan to improve your skills over time. Whether you're preparing for interviews or sharpening your algorithmic thinking, this tool is here to keep you on track and motivated!
+
 ## Getting Started
 
 First, run the development server:
